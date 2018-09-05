@@ -77,41 +77,20 @@ function matchNumber(obj){
     return matchCount;
 }
 //결과 출력하기
+//결과 출력하기
 function printStatic(matchResult){
-    let tmpRevenue=0;
-    let revenue=0;
+   
+    let revenue = (5000 * matchResult[2]) + (1500000 * matchResult[3])+ (1500000 * matchResult[4]) + (200000000 * matchResult[5])/(generateResult.length * 1000) * 100;
 
-    for(let i=0; i<matchResult.length; i++){
-        switch(i){
-            case 0:
-            console.log("1개 일치 (0원)- " + matchResult[i] +"개");
-            break;
-            case 1:
-            console.log("2개 일치 (0원)- " + matchResult[i] +"개");
-            break;
-            case 2:
-            tmpRevenue = tmpRevenue + (5000 * matchResult[i]);
-            console.log("3개 일치 (5000원)- " + matchResult[i] +"개");
-            break;
-            case 3:
-            tmpRevenue = tmpRevenue + (50000 * matchResult[i]);
-            console.log("4개 일치 (50000원)- " + matchResult[i] +"개");
-            break;
-            case 4:
-            tmpRevenue = tmpRevenue + (1500000 * matchResult[i]);
-            console.log("5개 일치 (1500000원)- " + matchResult[i] +"개");
-            break;
-            case 5:
-            tmpRevenue = tmpRevenue + (200000000 * matchResult[i]);
-            console.log("6개 일치 (200000000원)- " + matchResult[i] +"개");
-            break;
-        }
-    }
-    revenue = tmpRevenue/(generateResult.length * 1000) * 100;
+    console.log("1개 일치 (0원)- " + matchResult[0] +"개");
+    console.log("2개 일치 (0원)- " + matchResult[1] +"개");
+    console.log("3개 일치 (5000원)- " + matchResult[2] +"개");
+    console.log("4개 일치 (50000원)- " + matchResult[3] +"개");
+    console.log("5개 일치 (1500000원)- " + matchResult[4] +"개");
+    console.log("6개 일치 (200000000원)- " + matchResult[5] +"개");
     console.log("나의 수익률은 " + revenue + "입니다.");
     
 }
-
 
 buyRotto(2000);
 setLuckyNumber([1,2,3,4,5,6]);
