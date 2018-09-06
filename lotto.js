@@ -4,18 +4,23 @@ function buyLottos(price, luckyNum){
     const genLottoNum = Math.floor(price/1000);
     let genLottos = [];
     
+    //구매금액 유효성 체크
     validationMoney(price);
     
+    //구매금액 유효성이 통과된 경우
     if(genLottoNum > 0){
         
+        //구매금액만큼 로또 객체 생성
         for(let i=0; i<genLottoNum; i++){
             genLottos = genLottos.concat(RandomGeneratelottoNum());
         }   
         
+        //생성된 로또 객체 출력
         genLottos.forEach((lottoObj) => {
             console.log(lottoObj.nums);
         });
 
+        //생성된 로또 객체의 번호가 당첨번호가 맞는지 확인
         setLuckyNumber(genLottos, luckyNum);
     }  
 }
@@ -40,6 +45,7 @@ function RandomGeneratelottoNum(){
     };
     let tmplotto = [];
    
+    //로또 번호가 6개가 될 때까지 반복
     while(lottoObj.nums.length < 6){
         //임시 로또 번호 생성
         tmplotto = tmplotto.concat(Math.floor(Math.random()*45)+1);
@@ -53,17 +59,20 @@ function RandomGeneratelottoNum(){
     
 }
 
-//
+//당첨 번호와 로또 번호 비교
 function setLuckyNumber(genLottos, luckyNum){
     const luckyNumbers = luckyNum
     let result = [0,0,0,0,0,0];
     let idx =0;
     
+    //생성된 로또 리스트의 객체만큼 반복
     genLottos.forEach((lottoObj) => {
+        //당첨번호와 매치하는 숫자를 리턴하는 함수 호출
         idx = matchNumber(lottoObj, luckyNumbers)-1;
         result[idx]++;
     });
 
+    //결과 출력
     printStatic(genLottos, result);
 }
 
@@ -72,8 +81,11 @@ function matchNumber(lottoObj, luckyNumbers){
 
     let count = 0;
 
+    //로또 번호 번호 수 만큼 반복
     lottoObj.nums.forEach((lottoNum) => {
+        //당첨 번호 수 만큼 반복
         luckyNumbers.forEach((luckyNum) => {
+            //로또 번호와 당첨 번호가 같으면 count 1증가
             if(lottoNum === luckyNum){
                 count ++;
             }
