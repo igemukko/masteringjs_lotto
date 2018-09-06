@@ -1,25 +1,25 @@
-let generateResult = [];
-let luckyNum =[];
-
 //로또 구매 함수
-function buyRotto(price){
+function buyLottos(price, luckyNum){
     
-    const gernerateNum = Math.floor(price/1000);
-
+    const genLottoNum = Math.floor(price/1000);
+    let genLottos = [];
+    
     validationMoney(price);
     
-    if(gernerateNum > 0){
-        //구매하려는 장 수만큼 로또 번호 객체를 생성하는 함수 호출 , 그 결과를 배열에 넣는다.
-        for(let i=0; i<gernerateNum; i++){
-            generateResult = generateResult.concat(RandomGenerateRottoNum());
+    if(genLottoNum > 0){
+        
+        for(let i=0; i<genLottoNum; i++){
+            genLottos = genLottos.concat(RandomGeneratelottoNum());
         }   
-        //각 로또 객체가 가지고 있는 번호를 콘솔에 출력
-        generateResult.forEach((a) => {
-            console.log(a.num);
+        
+        genLottos.forEach((lottoObj) => {
+            console.log(lottoObj.nums);
         });
+
+        setLuckyNumber(genLottos, luckyNum);
     }  
 }
-
+//구매 금액 유효성 체크
 function validationMoney(price){
 
     const ErrorMsg = {
@@ -32,75 +32,70 @@ function validationMoney(price){
 
 }
 
-//6개의 로또 번호를 생성->객체에 담아서 리턴하는 함수
-function RandomGenerateRottoNum(){
+//로또 번호 생성
+function RandomGeneratelottoNum(){
     
-    let rotto = new Object();
-    rotto.num = [];
-    let tmpRotto = [];
+    const lottoObj = {
+        "nums":[]
+    };
+    let tmplotto = [];
    
-    //로또 객체의 번호배열의 길이가 6보다 작을 때까지 반복한다.
-    while(rotto.num.length < 6){
-        //1이상 45이하의 랜덤한 숫자를 생성하여 임시 배열에 숫자를 넣는다.
-        tmpRotto = tmpRotto.concat(Math.floor(Math.random()*45)+1);
-        //임시 배열의 숫자 중 중복이 있을 경우 중복을 제거하고 로또 객체의 로또 번호 배열에 넣는다. 
-        rotto.num = tmpRotto.filter((item, idx, array) => {
+    while(lottoObj.nums.length < 6){
+        //임시 로또 번호 생성
+        tmplotto = tmplotto.concat(Math.floor(Math.random()*45)+1);
+        //중복 제거
+        lottoObj.nums = tmplotto.filter((item, idx, array) => {
             return array.indexOf(item) === idx;
         });   
     }
     
-    return rotto;
+    return lottoObj;
     
 }
 
-// 당첨 번호와 로또 객체 번호를 비교하여 당첨된 갯수 확인
-function setLuckyNumber(luckyNumber){
-    //함수 호출 시 입력된 당첨번호를 전역 변수에 할당한다. 
-    luckyNum = luckyNumber;
-    //당첨 결과를 넣을 배열을 선언한다.
-    let matchResult = [0,0,0,0,0,0];
-    let tmpIndex =0;
-    //생성된 로또 장수만큼 반복을 실행
-    for(let i of generateResult){
-        //로또 번호와 당첨번호를 비교하여 매치된 갯수를 카운트한 결과를 반환하는 함수를 호출한다. 
-        //매치된 결과를 인덱스로 하여 해당 배열[인덱스]의 값을 1 증가시킨다.
-        tmpIndex = matchNumber(i)-1;
-        matchResult[tmpIndex]++;
-    }
+//
+function setLuckyNumber(genLottos, luckyNum){
+    const luckyNumbers = luckyNum
+    let result = [0,0,0,0,0,0];
+    let idx =0;
+    
+    genLottos.forEach((lottoObj) => {
+        idx = matchNumber(lottoObj, luckyNumbers)-1;
+        result[idx]++;
+    });
 
-    //결과 출력 함수 호출
-    printStatic(matchResult);
+    printStatic(genLottos, result);
 }
-//전달받은 로또와 당첨 번호를 비교하여 매치된 갯수를 반환하는 함수
-function matchNumber(obj){
 
-    //매치된 갯수를 카운트하기 위한 변수 선언
-    let matchCount = 0;
-    //배열에 넣어져 있는 로또 번호를 하나씩 가져오기
-    for(let i of obj.num){
-        //배열에 넣어져 있는 당첨 번호를 하나씩 가져오기
-        for(let j of luckyNum){
-            //당첨 번호와 로또 번호가 맞으면 count++
-            if(i===j) matchCount++
-        }
-    }
-    return matchCount;
+//로또와 당첨 번호 비교 (매치된 갯수 반환)
+function matchNumber(lottoObj, luckyNumbers){
+
+    let count = 0;
+
+    lottoObj.nums.forEach((lottoNum) => {
+        luckyNumbers.forEach((luckyNum) => {
+            if(lottoNum === luckyNum){
+                count ++;
+            }
+        });
+    });
+ 
+    return count;
 }
+
 //결과 출력하기
-//결과 출력하기
-function printStatic(matchResult){
+function printStatic(genLottos, result){
    
-    let revenue = (5000 * matchResult[2]) + (1500000 * matchResult[3])+ (1500000 * matchResult[4]) + (200000000 * matchResult[5])/(generateResult.length * 1000) * 100;
+    let revenue = (5000 * result[2]) + (1500000 * result[3])+ (1500000 * result[4]) + (200000000 * result[5])/(genLottos.length * 1000) * 100;
 
-    console.log("1개 일치 (0원)- " + matchResult[0] +"개");
-    console.log("2개 일치 (0원)- " + matchResult[1] +"개");
-    console.log("3개 일치 (5000원)- " + matchResult[2] +"개");
-    console.log("4개 일치 (50000원)- " + matchResult[3] +"개");
-    console.log("5개 일치 (1500000원)- " + matchResult[4] +"개");
-    console.log("6개 일치 (200000000원)- " + matchResult[5] +"개");
+    console.log("1개 일치 (0원)- " + result[0] +"개");
+    console.log("2개 일치 (0원)- " + result[1] +"개");
+    console.log("3개 일치 (5000원)- " + result[2] +"개");
+    console.log("4개 일치 (50000원)- " + result[3] +"개");
+    console.log("5개 일치 (1500000원)- " + result[4] +"개");
+    console.log("6개 일치 (200000000원)- " + result[5] +"개");
     console.log("나의 수익률은 " + revenue + "입니다.");
     
 }
 
-buyRotto(500);
-setLuckyNumber([1,2,3,4,5,6]);
+buyLottos(2000, [1,2,3,4,5,6]);
