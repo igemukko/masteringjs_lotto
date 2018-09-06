@@ -4,22 +4,32 @@ let luckyNum =[];
 //로또 구매 함수
 function buyRotto(price){
     
-    //에러메시지
-    const errorMsg = "1000원이상 구매 가능합니다.";
-    //1장당 1000원 이므로 구매하려는 금액/1000을 수행하여 구매하려는 로또 복권의 수 구하기
-    const gernerateNum = price/1000;
+    const gernerateNum = Math.floor(price/1000);
+
+    validationMoney(price);
     
-    //1000원 이하 입력 시 에러 메시지 출력
-    if(price < 1000) return errorMsg;
-    
-    //구매하려는 장 수만큼 로또 번호 객체를 생성하는 함수 호출 , 그 결과를 배열에 넣는다.
-    for(let i=0; i<gernerateNum; i++){
-        generateResult = generateResult.concat(RandomGenerateRottoNum());
-    }   
-    //각 로또 객체가 가지고 있는 번호를 콘솔에 출력
-    generateResult.forEach(function (a){
-        console.log(a.num);
-    });
+    if(gernerateNum > 0){
+        //구매하려는 장 수만큼 로또 번호 객체를 생성하는 함수 호출 , 그 결과를 배열에 넣는다.
+        for(let i=0; i<gernerateNum; i++){
+            generateResult = generateResult.concat(RandomGenerateRottoNum());
+        }   
+        //각 로또 객체가 가지고 있는 번호를 콘솔에 출력
+        generateResult.forEach((a) => {
+            console.log(a.num);
+        });
+    }  
+}
+
+function validationMoney(price){
+
+    const ErrorMsg = {
+        "MIN_MONEY" : "1000원이상 구매 가능합니다.",
+        "MAX_MONEY" : "한번에 구매할 수 있는 최대 금액은 100000원입니다. "
+    }
+
+    if(price < 1000 ) console.log(ErrorMsg.MIN_MONEY);
+    else if(price > 100000) console.log(ErrorMsg.MAX_MONEY);
+
 }
 
 //6개의 로또 번호를 생성->객체에 담아서 리턴하는 함수
@@ -92,5 +102,5 @@ function printStatic(matchResult){
     
 }
 
-buyRotto(2000);
+buyRotto(500);
 setLuckyNumber([1,2,3,4,5,6]);
